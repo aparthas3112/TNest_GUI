@@ -1,0 +1,80 @@
+{
+    "globals": {
+        "root": "results/BTManager-",
+        "use_original_errors": true,
+        "num_tempo2_its": 1
+    },
+    "sampler": {
+        "id": "multinest",
+        "sample": true,
+        "importance_sampling": 0,
+        "constant_efficiency": false,
+        "efficiency": 0.1,
+        "live_points": 4000
+    },
+    "elements": [
+        {
+            "name": "Power Law Red Noise",
+            "parameters": [
+                {
+                    "name": "amplitude",
+                    "prior_type": "log_uniform",
+                    "include": true,
+                    "fit": true,
+                    "min_value": -18,
+                    "max_value": -10
+                },
+                {
+                    "name": "spectral_index",
+                    "prior_type": "uniform",
+                    "include": true,
+                    "fit": true,
+                    "min_value": 0,
+                    "max_value": 7
+                }
+            ]
+        },
+        {
+            "name": "Power Law DM Noise",
+            "parameters": [
+                {
+                    "name": "amplitude",
+                    "prior_type": "log_uniform",
+                    "include": true,
+                    "fit": true,
+                    "min_value": -18,
+                    "max_value": -10
+                },
+                {
+                    "name": "spectral_index",
+                    "prior_type": "uniform",
+                    "include": true,
+                    "fit": true,
+                    "min_value": 0,
+                    "max_value": 7
+                }
+            ]
+        },
+        {
+            "name": "EFAC",
+            "parameters": [
+                {
+                    "name": "global",
+                    "prior_type": "log_uniform",
+                    "include": true,
+                    "fit": true,
+                    "min_value": -1,
+                    "max_value": 0.7
+                },
+                {
+                    "name": "per_flag",
+                    "prior_type": "log_uniform",
+                    "include": true,
+                    "fit": true,
+                    "min_value": -1,
+                    "max_value": 0.7
+                }
+            ]
+        }
+    ]
+}

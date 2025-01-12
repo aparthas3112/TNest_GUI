@@ -51,7 +51,7 @@ with col2:
 # Elements
 st.header("Elements")
 elements = []
-element_types = ["Power Law Red Noise", "Power Law DM Noise", "EFAC", "EQUAD", "Timing Model"]
+element_types = ["Timing Model", "Power Law Red Noise", "Power Law DM Noise", "EFAC", "EQUAD"]
 
 num_elements = st.number_input("Number of Elements", value=1, min_value=1, step=1)
 
@@ -60,9 +60,53 @@ for i in range(num_elements):
     col1, col2 = st.columns(2)
     with col1:
         element_name = st.selectbox(f"Element Name {i + 1}", element_types, key=f"element_name_{i}")
-    
+
     parameters = []
-    if element_name in RECOMMENDED_VALUES:
+    if element_name in ["EFAC", "EQUAD"]:
+        selected_model = st.radio(
+            f"Select Model Type for {element_name}",
+            ("Global", "Per Flag"),
+            key=f"model_type_{i}"
+        )
+
+        if selected_model == "Global":
+            col1, col2 = st.columns(2)
+            with col1:
+                min_value = st.number_input(f"Global Min Value for {element_name}", value=RECOMMENDED_VALUES[element_name]["global"]["min_value"], key=f"global_min_{i}")
+            with col2:
+                max_value = st.number_input(f"Global Max Value for {element_name}", value=RECOMMENDED_VALUES[element_name]["global"]["max_value"], key=f"global_max_{i}")
+
+            parameters.append({
+                "name": "global",
+                "description": f"global scaling for {element_name.lower()} error bars",
+                "prior_type": "uniform" if element_name == "EFAC" else "log_uniform",
+                "include": True,
+                "fit": True,
+                "min_value": min_value,
+                "max_value": max_value,
+            })
+
+        elif selected_model == "Per Flag":
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                min_value = st.number_input(f"Per Flag Min Value for {element_name}", value=RECOMMENDED_VALUES[element_name]["per_flag"]["min_value"], key=f"per_flag_min_{i}")
+            with col2:
+                max_value = st.number_input(f"Per Flag Max Value for {element_name}", value=RECOMMENDED_VALUES[element_name]["per_flag"]["max_value"], key=f"per_flag_max_{i}")
+            with col3:
+                flag = st.text_input(f"Flag for {element_name}", value="-fe", key=f"per_flag_flag_{i}")
+
+            parameters.append({
+                "name": "per_flag",
+                "description": f"per flag model for {element_name.lower()} error bars",
+                "prior_type": "uniform" if element_name == "EFAC" else "log_uniform",
+                "include": True,
+                "fit": True,
+                "min_value": min_value,
+                "max_value": max_value,
+                "flag": flag,
+            })
+
+    elif element_name in RECOMMENDED_VALUES:
         for param_name, param_vals in RECOMMENDED_VALUES[element_name].items():
             col1, col2 = st.columns(2)
             with col1:

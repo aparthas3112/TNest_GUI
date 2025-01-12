@@ -147,7 +147,18 @@ if st.button("Generate JSON"):
         },
         "elements": elements,
     }
-    st.json(config)
-    with open("config.json", "w") as f:
-        json.dump(config, f, indent=4)
-    st.success("JSON configuration file generated and saved as config.json!")
+    st.session_state.generated_json = json.dumps(config, indent=4)
+
+# Input for the filename
+file_name = st.text_input("Specify the name of the config file to save as", value="temponest_config.json")
+
+# Display the generated JSON if available
+if "generated_json" in st.session_state:
+    st.subheader("Generated JSON")
+    st.json(json.loads(st.session_state.generated_json))
+    st.download_button(
+        label="Download JSON File",
+        data=st.session_state.generated_json,
+        file_name=file_name,
+        mime="application/json"
+    )
